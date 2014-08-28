@@ -1,0 +1,6 @@
+dub.userprefs
+.dub/*
+__test__library__
+libdcrypto.a
+.DS_Store
+libseeds.a
