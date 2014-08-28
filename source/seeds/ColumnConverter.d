@@ -27,8 +27,9 @@ class ColumnConverter(Options ...) {
 
 	static Date dayMonthYear(string data) {
 		auto m = splitDate(data);
+		auto year = convertYear(m.captures[3]);
 		if (m) {
-			return Date(to!int(m.captures[3]), to!int(m.captures[2]), to!int(m.captures[1]));
+			return Date(year, to!int(m.captures[2]), to!int(m.captures[1]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (DMY)");
 		}
@@ -36,8 +37,9 @@ class ColumnConverter(Options ...) {
 	
 	static Date monthDayYear(string data) {
 		auto m = splitDate(data);
+		auto year = convertYear(m.captures[3]);
 		if (m) {
-			return Date(to!int(m.captures[3]), to!int(m.captures[1]), to!int(m.captures[2]));
+			return Date(year, to!int(m.captures[1]), to!int(m.captures[2]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (MDY)");
 		}
@@ -48,6 +50,12 @@ class ColumnConverter(Options ...) {
 			static const string separator = `[\\\/-]`;
 			static auto dateRegex = ctRegex!(`^(\d{1,2})` ~ separator ~ `(\d{1,2})` ~ separator ~ `(\d{4}|\d{2})$`);
 			return match(data, dateRegex);
+		}
+
+		static int convertYear(string year) {
+			auto y = to!int(year);
+			if (y < 100) y += 2000; // For people who have their data storing only the last two digits of a year
+			return y;
 		}
 	}
 }
