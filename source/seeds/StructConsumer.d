@@ -151,6 +151,7 @@ class StructConsumer(StructType, alias CallBack = (data) {}, ConverterType = Def
 		else {
 			if(all(_headersRequired.values)) {
 				logDebug("Found all mandatory headers on line " ~ to!string(lineNumber));
+				foreach(key, value; _headerMap) logDebugV("%s: %s", key, value);
 				_foundHeaders = true;
 			}
 		}
@@ -165,7 +166,9 @@ class StructConsumer(StructType, alias CallBack = (data) {}, ConverterType = Def
 	
 	override void consumeColumn(int columnNumber, string value) {
 		if (_foundHeaders) {
-			setColumn(_headerMap[columnNumber], value, _recordStruct);
+			if(columnNumber in _headerMap) {
+				setColumn(_headerMap[columnNumber], value, _recordStruct);
+			}
 		} else {
 			foreach (immutable ct; [EnumMembers!ColumnType]) {
 				if(matchHeader(ct, value)) {
