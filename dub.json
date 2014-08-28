@@ -1,5 +1,5 @@
 {
-	"name": "seeds",
+	"name": "d-seeds",
 	"description": "Utilities for seeding data from files.",
 	"copyright": "Copyright © 2014, David Monagle",
 	"authors": ["David Monagle"],
@@ -11,7 +11,7 @@
 	"configurations": [
 		{
 			"targetType": "library",
-			"name": "seeds"
+			"name": "d-seeds"
 		}
 	],
 }
