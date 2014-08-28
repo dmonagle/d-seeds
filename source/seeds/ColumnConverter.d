@@ -27,8 +27,8 @@ class ColumnConverter(Options ...) {
 
 	static Date dayMonthYear(string data) {
 		auto m = splitDate(data);
-		auto year = convertYear(m.captures[3]);
 		if (m) {
+			auto year = convertYear(m.captures[3]);
 			return Date(year, to!int(m.captures[2]), to!int(m.captures[1]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (DMY)");
@@ -37,8 +37,8 @@ class ColumnConverter(Options ...) {
 	
 	static Date monthDayYear(string data) {
 		auto m = splitDate(data);
-		auto year = convertYear(m.captures[3]);
 		if (m) {
+			auto year = convertYear(m.captures[3]);
 			return Date(year, to!int(m.captures[1]), to!int(m.captures[2]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (MDY)");
