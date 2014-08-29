@@ -45,6 +45,17 @@ class ColumnConverter(Options ...) {
 		}
 	}
 	
+	static Date yearMonthDay(string data) {
+		static const string separator = `[\\\/-]`;
+		static auto dateRegex = ctRegex!(`^(\d{4})` ~ separator ~ `(\d{2})` ~ separator ~ `(\d{2})$`);
+		auto m = match(data, dateRegex);
+		if (m) {
+			return Date(to!int(m.captures[1]), to!int(m.captures[2]), to!int(m.captures[3]));
+		} else {
+			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (YYYY-MM-DD)");
+		}
+	}
+	
 	protected {
 		static auto splitDate(string data) {
 			static const string separator = `[\\\/-]`;
