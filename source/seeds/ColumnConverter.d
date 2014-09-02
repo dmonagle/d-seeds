@@ -3,6 +3,7 @@
 import std.conv;
 import std.datetime;
 import std.regex;
+import std.typecons;
 
 class ColumnConversionException : Exception {
 	this(string s) { super(s); }
@@ -22,38 +23,55 @@ class ColumnConverter(Options ...) {
 	}
 
 	static T convert(T : Date)(string data) {
+		return yearMonthDay(data);
+	}
+	
+	static T convert(T : Nullable!Date)(string data) {
+		return yearMonthDay(data);
+	}
+	
+	static T convert(T : Date)(string data) {
 		return Date();
 	}
-
-	static Date dayMonthYear(string data) {
+	
+	static Nullable!Date dayMonthYear(string data) {
+		if (!data.length) return Nullable!Date();
 		auto m = splitDate(data);
+		auto returnDate = Nullable!Date();
 		if (m) {
 			auto year = convertYear(m.captures[3]);
-			return Date(year, to!int(m.captures[2]), to!int(m.captures[1]));
+			returnDate =  Date(year, to!int(m.captures[2]), to!int(m.captures[1]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (DMY)");
 		}
+		return returnDate;
 	}
 	
-	static Date monthDayYear(string data) {
+	static Nullable!Date monthDayYear(string data) {
+		if (!data.length) return Nullable!Date();
+		auto returnDate = Nullable!Date();
 		auto m = splitDate(data);
 		if (m) {
 			auto year = convertYear(m.captures[3]);
-			return Date(year, to!int(m.captures[1]), to!int(m.captures[2]));
+			returnDate = Date(year, to!int(m.captures[1]), to!int(m.captures[2]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (MDY)");
 		}
+		return returnDate;
 	}
 	
-	static Date yearMonthDay(string data) {
+	static Nullable!Date yearMonthDay(string data) {
+		if (!data.length) return Nullable!Date();
+		auto returnDate = Nullable!Date();
 		static const string separator = `[\\\/-]`;
 		static auto dateRegex = ctRegex!(`^(\d{4})` ~ separator ~ `(\d{2})` ~ separator ~ `(\d{2})$`);
 		auto m = match(data, dateRegex);
 		if (m) {
-			return Date(to!int(m.captures[1]), to!int(m.captures[2]), to!int(m.captures[3]));
+			returnDate = Date(to!int(m.captures[1]), to!int(m.captures[2]), to!int(m.captures[3]));
 		} else {
 			throw new ColumnConversionException("Could not convert '" ~ data ~ "' to Date (YYYY-MM-DD)");
 		}
+		return returnDate;
 	}
 	
 	protected {
