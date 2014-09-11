@@ -62,7 +62,7 @@ class StructConsumer(StructType, alias CallBack = (data) {}, ConverterType = Def
 		foreach (memberName; __traits(allMembers, StructType)) {
 			static if (isRWPlainField!(StructType, memberName) || isRWField!(StructType, memberName)) {
 				alias member = Tuple!(__traits(getMember, StructType, memberName));
-				alias memberType = typeof(__traits(getMember, StructType, memberName));
+				alias memberType = typeof(member);
 
 				alias columnUDA = findFirstUDA!(ColumnAttribute, member);
 
