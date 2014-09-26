@@ -24,7 +24,9 @@ void seedFromCsvData(StructConverter, alias pred = record => record.save())(stri
 
 
 void seedFromCsvFile(StructConverter, alias pred = record => record.save())(string fileName) {
-	auto data = cast(string)read(fileName);
+	if (exists(fileName)) {
+		auto data = cast(string)read(fileName);
 
-	seedFromCsvData!(StructConverter, pred)(data);
+		seedFromCsvData!(StructConverter, pred)(data);
+	}
 }
