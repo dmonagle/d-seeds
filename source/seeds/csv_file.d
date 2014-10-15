@@ -23,10 +23,16 @@ void seedFromCsvData(StructConverter, alias pred = record => record.save())(stri
 }
 
 
-void seedFromCsvFile(StructConverter, alias pred = record => record.save())(string fileName) {
+void seedFromCsvFile(StructConverter, alias pred = record => record.save())(string fileName, bool filterNonAscii = true) {
+	import std.algorithm;
+	import std.array;
+
 	if (exists(fileName)) {
-		auto data = cast(string)read(fileName);
+		auto fileContent = cast(ubyte[])(std.file.read(fileName));
+		if (filterNonAscii) fileContent = fileContent.filter!((ubyte a) => a < 128).array;
+		auto data = cast(string) fileContent;
 
 		seedFromCsvData!(StructConverter, pred)(data);
 	}
 }
+
