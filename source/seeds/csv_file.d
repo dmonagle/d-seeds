@@ -22,17 +22,21 @@ void seedFromCsvData(StructConverter, alias pred = record => record.save())(stri
 	parser.parse();
 }
 
-
-void seedFromCsvFile(StructConverter, alias pred = record => record.save())(string fileName, bool filterNonAscii = true) {
+string readCsvFile(string fileName, bool filterNonAscii = true) {
 	import std.algorithm;
 	import std.array;
-
+	
 	if (exists(fileName)) {
 		auto fileContent = cast(ubyte[])(std.file.read(fileName));
 		if (filterNonAscii) fileContent = fileContent.filter!((ubyte a) => a < 128).array;
-		auto data = cast(string) fileContent;
-
-		seedFromCsvData!(StructConverter, pred)(data);
+		return cast(string) fileContent;
 	}
+
+	return "";
+}
+
+void seedFromCsvFile(StructConverter, alias pred = record => record.save())(string fileName, bool filterNonAscii = true) {
+	auto data = readCsvFile(fileName, filterNonAscii);
+	if (data.length) seedFromCsvData!(StructConverter, pred)(data);
 }
 
