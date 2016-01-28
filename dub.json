@@ -6,7 +6,7 @@
 	"version": "0.0.1",
 	"license": "MIT",
 	"dependencies": {
-	    "vibe-d": ">=0.7.21-rc.2",
+		"vibe-d": "~>0.7.25",
 	},
 	"configurations": [
 		{
